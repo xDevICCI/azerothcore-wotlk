@@ -1,0 +1,107 @@
+#
+# This file is part of the AzerothCore Project. See AUTHORS file for Copyright information
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+
+#########################################
+# mod-arena-soloqueue configuration     #
+#########################################
+
+[worldserver]
+
+###################################################################################################
+#
+#    SoloQueue.2v2.Enable
+#        Description: Enable 2v2 Solo Queue arena.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    SoloQueue.3v3.Enable
+#        Description: Enable 3v3 Solo Queue arena.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    SoloQueue.MinLevel
+#        Description: Minimum player level to join Solo Queue.
+#        Default:     80
+#
+#    SoloQueue.Cost
+#        Description: Gold cost (in copper) to create a solo queue arena team.
+#                     Set to 0 for free.
+#        Default:     0
+#
+#    SoloQueue.FilterTalents
+#        Description: Enable role-based matchmaking (healer/melee/ranged balance).
+#                     When enabled, the system tries to give each team a healer
+#                     and balanced DPS composition.
+#        Default:     1 - Enabled
+#                     0 - Disabled (match by MMR only)
+#
+#    SoloQueue.MaxRatingDifference
+#        Description: Maximum MMR difference allowed between matched teams.
+#                     Lower values = fairer matches but longer queue times.
+#                     Set to 0 to disable MMR filtering.
+#        Default:     150
+#
+#    SoloQueue.CastDeserterOnLeave
+#        Description: Apply Deserter debuff when a player leaves an arena.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    SoloQueue.CastDeserterOnAfk
+#        Description: Apply Deserter debuff when a player goes AFK in arena.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    SoloQueue.StopGameIncomplete
+#        Description: End the arena match if a player leaves during preparation.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    SoloQueue.RatingPenalty.Leave
+#        Description: Rating penalty for leaving during an ongoing match.
+#        Default:     24
+#
+#    SoloQueue.RatingPenalty.LeaveBeforeStart
+#        Description: Rating penalty for leaving before the match starts.
+#        Default:     50
+#
+#    SoloQueue.ArenaPointsMulti
+#        Description: Multiplier for arena points earned in Solo Queue.
+#                     1.0 = same as regular arenas, 0.8 = 80% of normal.
+#        Default:     0.8
+#
+#    SoloQueue.ShowMessageOnLogin
+#        Description: Show a message to players on login about Solo Queue.
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+#    SoloQueue.CheckEquipAndTalents
+#        Description: Require all equipment slots filled and no unspent talent
+#                     points before allowing queue join.
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+###################################################################################################
+
+SoloQueue.2v2.Enable = 1
+SoloQueue.3v3.Enable = 1
+SoloQueue.MinLevel = 80
+SoloQueue.Cost = 0
+SoloQueue.FilterTalents = 1
+SoloQueue.MaxRatingDifference = 150
+SoloQueue.CastDeserterOnLeave = 1
+SoloQueue.CastDeserterOnAfk = 1
+SoloQueue.StopGameIncomplete = 1
+SoloQueue.RatingPenalty.Leave = 24
+SoloQueue.RatingPenalty.LeaveBeforeStart = 50
+SoloQueue.ArenaPointsMulti = 0.8
+SoloQueue.ShowMessageOnLogin = 1
+SoloQueue.CheckEquipAndTalents = 0
