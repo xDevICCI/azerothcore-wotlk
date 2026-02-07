@@ -1,0 +1,65 @@
+#
+# This file is part of the AzerothCore Project. See AUTHORS file for Copyright information
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+
+########################################
+# mod-bg-queue-announcer configuration #
+########################################
+
+[worldserver]
+
+###################################################################################################
+#    BgQueueAnnouncer.Enable
+#        Description: Enable Battleground Queue Announcer module
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+#    BgQueueAnnouncer.PlayerOnly
+#        Description: Show BG queue status only to the player who joins
+#        Default:     0 - Announce to world
+#                     1 - Announce only to player
+#
+#    BgQueueAnnouncer.Timed
+#        Description: Use timed announcements instead of immediate announcements
+#        Default:     0 - Disabled (announce immediately)
+#                     1 - Enabled (announce on timer)
+#
+#    BgQueueAnnouncer.Timer
+#        Description: Timer interval for timed announcements (in milliseconds)
+#        Default:     30000 (30 seconds)
+#
+#    BgQueueAnnouncer.SpamProtection.Delay
+#        Description: Minimum delay between announcements from the same player (in seconds)
+#        Default:     30
+#
+#    BgQueueAnnouncer.Limit.MinLevel
+#        Description: Minimum level bracket to apply player limit filter (0 = disabled)
+#        Default:     0
+#
+#    BgQueueAnnouncer.Limit.MinPlayers
+#        Description: Minimum players in queue before announcing for limited brackets
+#        Default:     3
+#
+#    BgQueueAnnouncer.OnStart.Enable
+#        Description: Announce when a Battleground starts
+#        Default:     1 - Enabled
+#                     0 - Disabled
+#
+###################################################################################################
+
+BgQueueAnnouncer.Enable = 0
+BgQueueAnnouncer.PlayerOnly = 0
+BgQueueAnnouncer.Timed = 0
+BgQueueAnnouncer.Timer = 30000
+BgQueueAnnouncer.SpamProtection.Delay = 30
+BgQueueAnnouncer.Limit.MinLevel = 0
+BgQueueAnnouncer.Limit.MinPlayers = 3
+BgQueueAnnouncer.OnStart.Enable = 1
