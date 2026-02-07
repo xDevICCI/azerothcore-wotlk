@@ -1,0 +1,53 @@
+#
+# This file is part of the AzerothCore Project. See AUTHORS file for Copyright information
+#
+# This file is free software; as a special exception the author gives
+# unlimited permission to copy and/or distribute it, with or without
+# modifications, as long as this notice is preserved.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
+# implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+
+####################################
+# mod-memory-cap configuration     #
+####################################
+
+[worldserver]
+
+###################################################################################################
+#    MemoryCap.Enable
+#        Description: Enable periodic memory usage monitoring. When enabled, the server will
+#                     check its RSS (Resident Set Size) memory consumption at regular intervals.
+#                     If the configured maximum is exceeded, the server will initiate a graceful
+#                     restart to prevent the machine from crashing due to memory exhaustion.
+#        Default:     0 - Disabled
+#                     1 - Enabled
+#
+#    MemoryCap.MaxMB
+#        Description: Maximum allowed memory usage in megabytes. When the server's memory
+#                     consumption reaches or exceeds this value, a graceful restart with a
+#                     30-second countdown will be initiated automatically.
+#                     Set to 0 to disable the cap (only log warnings).
+#        Default:     0 - (Unlimited, no cap enforced)
+#
+#    MemoryCap.WarnMB
+#        Description: Memory usage threshold in megabytes for warning log messages.
+#                     When exceeded, a warning is logged at each check interval.
+#                     Should be lower than MemoryCap.MaxMB to provide early alerts.
+#                     Set to 0 to disable warnings.
+#        Default:     0 - (Disabled, no warnings)
+#
+#    MemoryCap.CheckInterval
+#        Description: How often (in seconds) the server checks its memory usage.
+#                     Lower values provide faster detection but add minimal overhead.
+#                     Minimum value: 5 seconds.
+#        Default:     30
+#
+###################################################################################################
+
+MemoryCap.Enable = 0
+MemoryCap.MaxMB = 0
+MemoryCap.WarnMB = 0
+MemoryCap.CheckInterval = 30
