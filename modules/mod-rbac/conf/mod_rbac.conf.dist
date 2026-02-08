@@ -1,0 +1,125 @@
+#
+# mod-rbac Configuration
+#
+# Module-based Role-Based Access Control (RBAC) for AzerothCore
+#
+# Implements granular command permissions using module_string-style
+# composite keys (module, id) to namespace permissions per module.
+# Supports per-account grants/denies, role-based permission bundles,
+# and security-level-based defaults.
+#
+
+###################################################################################################
+#   GENERAL SETTINGS
+###################################################################################################
+
+#
+#   RBAC.Enable
+#       Description: Enable or disable the RBAC permission system
+#       Note:        When disabled, all commands use the standard security level check.
+#                    Enable this only after importing the RBAC SQL tables.
+#       Default:     0 (Disabled)
+#
+RBAC.Enable = 0
+
+#
+#   RBAC.DenyOverridesGrant
+#       Description: When true, an explicit DENY always overrides a GRANT
+#                    (even grants from assigned roles).
+#       Default:     1 (Deny overrides)
+#
+RBAC.DenyOverridesGrant = 1
+
+#
+#   RBAC.LogPermissionChecks
+#       Description: Log every RBAC permission check for debugging.
+#                    WARNING: Very verbose. Only enable for troubleshooting.
+#       Default:     0 (Disabled)
+#
+RBAC.LogPermissionChecks = 0
+
+###################################################################################################
+#   GM COMMANDS
+###################################################################################################
+
+#
+#   Available commands:
+#
+#   .rbac status
+#       - Shows if RBAC module is enabled and permission/role counts
+#       - Requires: SEC_GAMEMASTER
+#
+#   .rbac account grant <accountId> <module> <permId>
+#       - Grant a specific permission to an account
+#       - Example: .rbac account grant 1 core 60
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac account deny <accountId> <module> <permId>
+#       - Deny a specific permission for an account
+#       - Overrides security level and role grants
+#       - Example: .rbac account deny 2 core 10
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac account revoke <accountId> <module> <permId>
+#       - Remove a grant or deny (revert to default behavior)
+#       - Example: .rbac account revoke 1 core 60
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac account list <accountId>
+#       - Show all effective permissions for an account
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac role create <name>
+#       - Create a new named role
+#       - Example: .rbac role create Chat Moderator
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac role addperm <roleId> <module> <permId>
+#       - Add a permission to a role
+#       - Example: .rbac role addperm 1 core 60
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac role assign <accountId> <roleId>
+#       - Assign a role to an account
+#       - Example: .rbac role assign 1 2
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac role unassign <accountId> <roleId>
+#       - Remove a role from an account
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac role list
+#       - List all defined roles
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac permlist [module]
+#       - List all permissions (optionally filtered by module)
+#       - Example: .rbac permlist core
+#       - Requires: SEC_ADMINISTRATOR
+#
+#   .rbac reload
+#       - Reload all RBAC data from database
+#       - Requires: SEC_ADMINISTRATOR
+#
+
+###################################################################################################
+#   HOW IT WORKS
+###################################################################################################
+
+#
+#   Permission Resolution Order:
+#   1. Check explicit account DENY → block command
+#   2. Check explicit account GRANT + role GRANT → allow command
+#   3. Fall through to standard security level check
+#
+#   Module Namespacing:
+#   Permissions use composite keys (module, id). Each module has its own
+#   independent ID space, just like module_string. A "core" module is used
+#   for built-in AC commands. Other modules (e.g., mod-guild-ban) can
+#   define their own permissions in their SQL files.
+#
+#   Known Limitation:
+#   The OnBeforeIsInvokerVisible hook can only GRANT visibility, not DENY it.
+#   Denied commands may still appear in .help if the player has the security
+#   level, but execution will be blocked by the OnTryExecuteCommand hook.
+#
