@@ -70,13 +70,13 @@ public:
 
         if (sRBACMgr->GrantPermission(accountId, module, permId))
         {
-            handler->PSendSysMessage("|cff00ff00[RBAC]|r Granted permission (%s, %u) to account %u.",
-                module.c_str(), permId, accountId);
+            handler->PSendSysMessage("|cff00ff00[RBAC]|r Granted permission ({}, {}) to account {}.",
+                module, permId, accountId);
         }
         else
         {
-            handler->PSendSysMessage("|cffff0000[RBAC]|r Permission (%s, %u) not found.",
-                module.c_str(), permId);
+            handler->PSendSysMessage("|cffff0000[RBAC]|r Permission ({}, {}) not found.",
+                module, permId);
         }
         return true;
     }
@@ -93,13 +93,13 @@ public:
 
         if (sRBACMgr->DenyPermission(accountId, module, permId))
         {
-            handler->PSendSysMessage("|cff00ff00[RBAC]|r Denied permission (%s, %u) for account %u.",
-                module.c_str(), permId, accountId);
+            handler->PSendSysMessage("|cff00ff00[RBAC]|r Denied permission ({}, {}) for account {}.",
+                module, permId, accountId);
         }
         else
         {
-            handler->PSendSysMessage("|cffff0000[RBAC]|r Permission (%s, %u) not found.",
-                module.c_str(), permId);
+            handler->PSendSysMessage("|cffff0000[RBAC]|r Permission ({}, {}) not found.",
+                module, permId);
         }
         return true;
     }
@@ -115,8 +115,8 @@ public:
         }
 
         sRBACMgr->RevokePermission(accountId, module, permId);
-        handler->PSendSysMessage("|cff00ff00[RBAC]|r Revoked permission (%s, %u) from account %u.",
-            module.c_str(), permId, accountId);
+        handler->PSendSysMessage("|cff00ff00[RBAC]|r Revoked permission ({}, {}) from account {}.",
+            module, permId, accountId);
         return true;
     }
 
@@ -132,11 +132,11 @@ public:
         RBACAccountData const* data = sRBACMgr->GetAccountData(accountId);
         if (!data)
         {
-            handler->PSendSysMessage("No RBAC data for account %u.", accountId);
+            handler->PSendSysMessage("No RBAC data for account {}.", accountId);
             return true;
         }
 
-        handler->PSendSysMessage("=== RBAC for Account %u (SecLevel: %u) ===", accountId, data->securityLevel);
+        handler->PSendSysMessage("=== RBAC for Account {} (SecLevel: {}) ===", accountId, data->securityLevel);
 
         // Effective grants
         handler->SendSysMessage("|cff00ff00Effective Grants:|r");
@@ -149,9 +149,9 @@ public:
             for (auto const& key : data->effectiveGranted)
             {
                 RBACPermission const* perm = sRBACMgr->GetPermission(key.first, key.second);
-                handler->PSendSysMessage("  [%s:%u] %s",
-                    key.first.c_str(), key.second,
-                    perm ? perm->name.c_str() : "Unknown");
+                handler->PSendSysMessage("  [{}:{}] {}",
+                    key.first, key.second,
+                    perm ? perm->name : "Unknown");
             }
         }
 
@@ -166,9 +166,9 @@ public:
             for (auto const& key : data->effectiveDenied)
             {
                 RBACPermission const* perm = sRBACMgr->GetPermission(key.first, key.second);
-                handler->PSendSysMessage("  [%s:%u] %s",
-                    key.first.c_str(), key.second,
-                    perm ? perm->name.c_str() : "Unknown");
+                handler->PSendSysMessage("  [{}:{}] {}",
+                    key.first, key.second,
+                    perm ? perm->name : "Unknown");
             }
         }
 
@@ -183,8 +183,8 @@ public:
             for (uint32 roleId : data->roleIds)
             {
                 RBACRole const* role = sRBACMgr->GetRole(roleId);
-                handler->PSendSysMessage("  [%u] %s",
-                    roleId, role ? role->name.c_str() : "Unknown");
+                handler->PSendSysMessage("  [{}] {}",
+                    roleId, role ? role->name : "Unknown");
             }
         }
 
@@ -214,8 +214,8 @@ public:
         uint32 roleId = sRBACMgr->CreateRole(roleName);
         if (roleId)
         {
-            handler->PSendSysMessage("|cff00ff00[RBAC]|r Created role '%s' with ID %u.",
-                roleName.c_str(), roleId);
+            handler->PSendSysMessage("|cff00ff00[RBAC]|r Created role '{}' with ID {}.",
+                roleName, roleId);
         }
         else
         {
@@ -236,8 +236,8 @@ public:
 
         if (sRBACMgr->AddPermToRole(roleId, module, permId))
         {
-            handler->PSendSysMessage("|cff00ff00[RBAC]|r Added permission (%s, %u) to role %u.",
-                module.c_str(), permId, roleId);
+            handler->PSendSysMessage("|cff00ff00[RBAC]|r Added permission ({}, {}) to role {}.",
+                module, permId, roleId);
         }
         else
         {
@@ -258,7 +258,7 @@ public:
 
         if (sRBACMgr->AssignRole(accountId, roleId))
         {
-            handler->PSendSysMessage("|cff00ff00[RBAC]|r Assigned role %u to account %u.",
+            handler->PSendSysMessage("|cff00ff00[RBAC]|r Assigned role {} to account {}.",
                 roleId, accountId);
         }
         else
@@ -279,7 +279,7 @@ public:
         }
 
         sRBACMgr->UnassignRole(accountId, roleId);
-        handler->PSendSysMessage("|cff00ff00[RBAC]|r Unassigned role %u from account %u.",
+        handler->PSendSysMessage("|cff00ff00[RBAC]|r Unassigned role {} from account {}.",
             roleId, accountId);
         return true;
     }
@@ -303,8 +303,8 @@ public:
         handler->SendSysMessage("=== RBAC Roles ===");
         for (auto const& [id, role] : roles)
         {
-            handler->PSendSysMessage("  [%u] %s (%zu permissions)",
-                id, role.name.c_str(), role.permissions.size());
+            handler->PSendSysMessage("  [{}] {} ({} permissions)",
+                id, role.name, role.permissions.size());
         }
         return true;
     }
@@ -335,11 +335,11 @@ public:
             if (filterModule && *filterModule != perm.module)
                 continue;
 
-            handler->PSendSysMessage("  [%s:%u] %s %s",
-                perm.module.c_str(), perm.id,
-                perm.name.c_str(),
+            handler->PSendSysMessage("  [{}:{}] {} {}",
+                perm.module, perm.id,
+                perm.name,
                 perm.linkedCommand.empty() ? "" :
-                    Acore::StringFormat("-> .{}", perm.linkedCommand).c_str());
+                    Acore::StringFormat("-> .{}", perm.linkedCommand));
         }
         return true;
     }
@@ -355,13 +355,13 @@ public:
     // .rbac status
     static bool HandleRbacStatus(ChatHandler* handler)
     {
-        handler->PSendSysMessage("RBAC Module: %s",
+        handler->PSendSysMessage("RBAC Module: {}",
             sRBACMgr->IsEnabled() ? "|cff00ff00ENABLED|r" : "|cffff0000DISABLED|r");
 
         if (sRBACMgr->IsEnabled())
         {
-            handler->PSendSysMessage("  Permissions: %zu", sRBACMgr->GetAllPermissions().size());
-            handler->PSendSysMessage("  Roles: %zu", sRBACMgr->GetAllRoles().size());
+            handler->PSendSysMessage("  Permissions: {}", sRBACMgr->GetAllPermissions().size());
+            handler->PSendSysMessage("  Roles: {}", sRBACMgr->GetAllRoles().size());
         }
         return true;
     }

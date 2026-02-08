@@ -4,6 +4,8 @@
  */
 
 #include "RBAC.h"
+#include "QueryResult.h"
+#include "Field.h"
 #include "World.h"
 #include "AccountMgr.h"
 #include "Realm.h"
@@ -535,7 +537,8 @@ uint32 RBACMgr::CreateRole(std::string const& name)
     if (!result)
         return 0;
 
-    uint32 roleId = (*result)[0].Get<uint32>();
+    Field* fields = result->Fetch();
+    uint32 roleId = fields[0].Get<uint32>();
 
     RBACRole role;
     role.id = roleId;
