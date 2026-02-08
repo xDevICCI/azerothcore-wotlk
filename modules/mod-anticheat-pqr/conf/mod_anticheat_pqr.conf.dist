@@ -1,0 +1,287 @@
+#
+# mod-anticheat-pqr Configuration
+#
+# Anti-PQR/Bot Detection Module for AzerothCore
+#
+# This module detects automation tools like PQR by analyzing:
+# - Spell cast timing patterns (bots have unnaturally consistent timing)
+# - Reaction times (interrupts/dispels faster than human capability)
+# - Rotation patterns (perfect, repeating spell sequences)
+#
+
+###################################################################################################
+#   GENERAL SETTINGS
+###################################################################################################
+
+#
+#   AnticheatPqr.Enable
+#       Description: Enable or disable the AnticheatPqr module
+#       Default:     1 (Enabled)
+#
+AnticheatPqr.Enable = 1
+
+#
+#   AnticheatPqr.LogToDatabase
+#       Description: Log violations and alerts to the database
+#       Default:     1 (Enabled)
+#
+AnticheatPqr.LogToDatabase = 1
+
+#
+#   AnticheatPqr.AlertGMs
+#       Description: Send alerts to online GMs when suspicious activity is detected
+#       Note:        Only alerts for MEDIUM (2) and HIGH (3) suspicion levels
+#       Default:     1 (Enabled)
+#
+AnticheatPqr.AlertGMs = 1
+
+#
+#   AnticheatPqr.AutoBan
+#       Description: Automatically ban players who exceed the AutoBanThreshold
+#       WARNING:     Use with caution! May cause false positives. Recommend manual review first.
+#       Default:     0 (Disabled)
+#
+AnticheatPqr.AutoBan = 0
+
+###################################################################################################
+#   ANALYSIS SETTINGS
+###################################################################################################
+
+#
+#   AnticheatPqr.MinCastsForAnalysis
+#       Description: Minimum number of spell casts before analysis begins
+#       Note:        Higher values = more accurate but slower detection
+#       Default:     20
+#
+AnticheatPqr.MinCastsForAnalysis = 20
+
+#
+#   AnticheatPqr.MaxHistorySize
+#       Description: Maximum number of spell casts to keep in history per player
+#       Note:        Higher values use more memory but provide better analysis
+#       Default:     100
+#
+AnticheatPqr.MaxHistorySize = 100
+
+#
+#   AnticheatPqr.RotationWindowSize
+#       Description: Number of spells to compare when checking for rotation patterns
+#       Default:     10
+#
+AnticheatPqr.RotationWindowSize = 10
+
+#
+#   AnticheatPqr.AnalysisIntervalMs
+#       Description: How often to run analysis on each player (in milliseconds)
+#       Default:     5000 (5 seconds)
+#
+AnticheatPqr.AnalysisIntervalMs = 5000
+
+###################################################################################################
+#   TIMING DETECTION
+###################################################################################################
+
+#
+#   AnticheatPqr.SuspiciousTimingVariance
+#       Description: Standard deviation threshold below which timing is suspicious (in ms)
+#       Note:        Human players typically have 50-200ms variance. Bots have <20ms.
+#       Default:     15.0
+#
+AnticheatPqr.SuspiciousTimingVariance = 15.0
+
+###################################################################################################
+#   REACTION TIME DETECTION
+###################################################################################################
+
+#
+#   AnticheatPqr.MinReactionTimeMs
+#       Description: Reaction times below this are considered impossible for humans (in ms)
+#       Note:        Human reaction time minimum is ~150ms. Network latency adds more.
+#                    Reactions below 80ms are almost certainly automated.
+#       Default:     80
+#
+AnticheatPqr.MinReactionTimeMs = 80
+
+#
+#   AnticheatPqr.HumanReactionMinMs
+#       Description: Minimum realistic human reaction time (in ms)
+#       Note:        Reactions between MinReactionTimeMs and this value are "suspicious"
+#                    Pro gamers average ~150-200ms. Average players ~200-300ms.
+#       Default:     150
+#
+AnticheatPqr.HumanReactionMinMs = 150
+
+###################################################################################################
+#   ALERT THRESHOLDS
+###################################################################################################
+
+#
+#   Alert Levels:
+#       0 = No alert
+#       1 = LOW suspicion (monitoring)
+#       2 = MEDIUM suspicion (GM alert)
+#       3 = HIGH suspicion (GM alert + potential action)
+#
+#   Score Interpretation:
+#       0-40:   Normal player behavior
+#       40-60:  Slightly suspicious, worth monitoring
+#       60-80:  Moderately suspicious, likely automation
+#       80-100: Highly suspicious, almost certainly using automation
+#
+
+#
+#   AnticheatPqr.AlertThresholdLow
+#       Description: Score threshold for LOW suspicion alert (level 1)
+#       Default:     40.0
+#
+AnticheatPqr.AlertThresholdLow = 40.0
+
+#
+#   AnticheatPqr.AlertThresholdMedium
+#       Description: Score threshold for MEDIUM suspicion alert (level 2)
+#       Note:        This level triggers GM alerts
+#       Default:     60.0
+#
+AnticheatPqr.AlertThresholdMedium = 60.0
+
+#
+#   AnticheatPqr.AlertThresholdHigh
+#       Description: Score threshold for HIGH suspicion alert (level 3)
+#       Default:     80.0
+#
+AnticheatPqr.AlertThresholdHigh = 80.0
+
+#
+#   AnticheatPqr.AutoBanThreshold
+#       Description: Score threshold for automatic ban (if AutoBan is enabled)
+#       WARNING:     Set high to minimize false positives
+#       Default:     95.0
+#
+AnticheatPqr.AutoBanThreshold = 95.0
+
+###################################################################################################
+#   COOLDOWNS
+###################################################################################################
+
+#
+#   AnticheatPqr.AlertCooldownMs
+#       Description: Minimum time between alerts for the same player (in milliseconds)
+#       Note:        Prevents alert spam
+#       Default:     60000 (60 seconds)
+#
+AnticheatPqr.AlertCooldownMs = 60000
+
+###################################################################################################
+#   GM COMMANDS
+###################################################################################################
+
+#
+#   Available commands (requires GAMEMASTER security level):
+#
+#   .anticheatpqr status
+#       - Shows if the module is enabled/disabled
+#
+#   .anticheatpqr check [player]
+#       - Shows detailed detection report for player
+#       - If no player specified, uses selected target
+#
+#   .anticheatpqr reset [player]
+#       - Resets detection data for player
+#       - Useful after confirming false positive
+#
+#   .anticheatpqr reload
+#       - Reloads configuration from file (requires ADMINISTRATOR)
+#
+
+###################################################################################################
+#   WARDEN INTEGRATION
+###################################################################################################
+
+#
+#   AnticheatPqr.Warden.Enable
+#       Description: Enable Warden integration for DLL/memory detection
+#       Note:        Uses the core's Warden system to detect injected DLLs,
+#                    scan client memory, and evaluate Lua globals associated
+#                    with PQR and similar automation tools.
+#                    Requires Warden to be enabled in worldserver.conf
+#       Default:     1 (Enabled)
+#
+AnticheatPqr.Warden.Enable = 1
+
+#
+#   AnticheatPqr.Warden.ScanIntervalMs
+#       Description: Minimum interval between forced Warden scans (in ms)
+#       Note:        When behavioral analysis detects suspicious activity,
+#                    a Warden scan is forced. This cooldown prevents excessive scanning.
+#       Default:     30000 (30 seconds)
+#
+AnticheatPqr.Warden.ScanIntervalMs = 30000
+
+#
+#   AnticheatPqr.Warden.ScoreWeight
+#       Description: Weight of Warden detection in overall score (0.0-1.0)
+#       Note:        When enabled, other weights are adjusted proportionally:
+#                    Reaction: 0.35, Timing: 0.25, Pattern: 0.10, Warden: 0.30
+#       Default:     0.30
+#
+AnticheatPqr.Warden.ScoreWeight = 0.30
+
+#
+#   AnticheatPqr.Warden.ForceOnSuspicion
+#       Description: Force a Warden scan when behavioral score exceeds low threshold
+#       Note:        Proactively scans suspicious players for DLL injection
+#       Default:     1 (Enabled)
+#
+AnticheatPqr.Warden.ForceOnSuspicion = 1
+
+###################################################################################################
+#   GM COMMANDS
+###################################################################################################
+
+#
+#   Available commands (requires GAMEMASTER security level):
+#
+#   .anticheatpqr status
+#       - Shows if the module and Warden integration are enabled/disabled
+#
+#   .anticheatpqr check [player]
+#       - Shows detailed detection report for player (includes Warden data)
+#       - If no player specified, uses selected target
+#
+#   .anticheatpqr reset [player]
+#       - Resets detection data for player
+#       - Useful after confirming false positive
+#
+#   .anticheatpqr wardenscan [player]
+#       - Forces an immediate Warden scan for the specified player
+#       - Sends all pending checks (MODULE_CHECK, LUA_EVAL_CHECK, etc.)
+#
+#   .anticheatpqr reload
+#       - Reloads configuration from file (requires ADMINISTRATOR)
+#
+
+###################################################################################################
+#   SCORE CALCULATION
+###################################################################################################
+
+#
+#   The overall score is calculated as a weighted average:
+#
+#   Without Warden:
+#   Overall = (Reaction * 0.45) + (Timing * 0.35) + (Pattern * 0.20)
+#
+#   With Warden enabled:
+#   Overall = (Reaction * 0.35) + (Timing * 0.25) + (Pattern * 0.10) + (Warden * 0.30)
+#
+#   - Reaction Score: Based on inhuman reaction times
+#     Most reliable indicator - humans cannot react faster than ~150ms
+#
+#   - Timing Score: Based on cast timing variance
+#     Bots have very consistent timing, humans vary naturally
+#
+#   - Pattern Score: Based on rotation repetition
+#     Lower weight due to possible false positives (some rotations are optimal)
+#
+#   - Warden Score: Based on DLL injection and Lua global detection
+#     Definitive proof of bot usage when positive
+#
